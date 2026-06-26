@@ -250,25 +250,203 @@ export function CosmicTealBg() {
             background: `
                 radial-gradient(ellipse 80% 70% at 50% 55%, rgba(0,180,180,0.22) 0%, rgba(0,180,180,0) 60%),
                 conic-gradient(from 156deg at 55% 60%,
-                    #1a6a78 0%,
-                    #145a72 14%,
-                    #0c466e 28%,
-                    #0e3f6a 42%,
-                    #0a2e54 56%,
-                    #082842 70%,
-                    #155f7a 86%,
-                    #1a6a78 100%
+                    #1a6a78 0%, #145a72 14%, #0c466e 28%, #0e3f6a 42%,
+                    #0a2e54 56%, #082842 70%, #155f7a 86%, #1a6a78 100%
                 )
             `,
         }}>
-            {/* Soft teal glow blob (center light) */}
-            <div style={{
-                position: "absolute",
-                inset: 0,
-                background: "radial-gradient(circle 700px at 55% 70%, rgba(0,245,212,0.22), transparent 60%)",
-                pointerEvents: "none",
-            }} />
+            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle 700px at 55% 70%, rgba(0,245,212,0.22), transparent 60%)", pointerEvents: "none" }} />
             <MeteorBg transparent />
+        </div>
+    );
+}
+
+// Sakura — falling pink petals on dusk gradient
+export function SakuraBg() {
+    const draw = (ctx, w, h, s, t) => {
+        if (!s.petals) {
+            s.petals = Array(80).fill(0).map(() => ({
+                x: Math.random() * w, y: Math.random() * h,
+                r: (3 + Math.random() * 4) * window.devicePixelRatio,
+                vy: (0.4 + Math.random() * 0.8) * window.devicePixelRatio,
+                vx: (Math.random() - 0.5) * 0.4 * window.devicePixelRatio,
+                ph: Math.random() * Math.PI * 2,
+                spin: (Math.random() - 0.5) * 0.05,
+                ang: Math.random() * Math.PI * 2,
+            }));
+        }
+        ctx.clearRect(0, 0, w, h);
+        s.petals.forEach((p) => {
+            p.x += p.vx + Math.sin(t / 500 + p.ph) * 0.3;
+            p.y += p.vy;
+            p.ang += p.spin;
+            if (p.y > h + 20) { p.y = -20; p.x = Math.random() * w; }
+            if (p.x < -20) p.x = w + 20;
+            if (p.x > w + 20) p.x = -20;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.ang);
+            ctx.fillStyle = "rgba(255,183,197,0.9)";
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.r * 1.4, p.r * 0.6, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        });
+    };
+    const ref = useCanvas(draw);
+    return (
+        <div data-testid={TID.backgroundCanvas} style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(180deg, #2d1830 0%, #4a2c4a 30%, #6d3a5a 65%, #8a4565 100%)",
+        }}>
+            <canvas ref={ref} style={{ position: "absolute", inset: 0 }} />
+        </div>
+    );
+}
+
+// Bubbles — rising round bubbles, deep ocean gradient
+export function BubblesBg() {
+    const draw = (ctx, w, h, s, t) => {
+        if (!s.bubbles) {
+            s.bubbles = Array(60).fill(0).map(() => ({
+                x: Math.random() * w,
+                y: h + Math.random() * h,
+                r: (3 + Math.random() * 12) * window.devicePixelRatio,
+                vy: (0.5 + Math.random() * 1.2) * window.devicePixelRatio,
+                wobble: Math.random() * Math.PI * 2,
+            }));
+        }
+        ctx.clearRect(0, 0, w, h);
+        s.bubbles.forEach((b) => {
+            b.y -= b.vy;
+            const x = b.x + Math.sin(t / 800 + b.wobble) * 8;
+            if (b.y < -b.r) { b.y = h + 20; b.x = Math.random() * w; }
+            ctx.strokeStyle = "rgba(150,220,255,0.55)";
+            ctx.lineWidth = 1.5 * window.devicePixelRatio;
+            ctx.beginPath();
+            ctx.arc(x, b.y, b.r, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = "rgba(180,230,255,0.18)";
+            ctx.fill();
+            // highlight
+            ctx.fillStyle = "rgba(255,255,255,0.55)";
+            ctx.beginPath();
+            ctx.arc(x - b.r * 0.4, b.y - b.r * 0.4, b.r * 0.18, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    };
+    const ref = useCanvas(draw);
+    return (
+        <div data-testid={TID.backgroundCanvas} style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(180deg, #062a4d 0%, #0a3a6e 40%, #0d4a8f 75%, #1057a8 100%)",
+        }}>
+            <canvas ref={ref} style={{ position: "absolute", inset: 0 }} />
+        </div>
+    );
+}
+
+// Northern Lights — vertical animated bands
+export function NorthernLightsBg() {
+    const draw = (ctx, w, h, s, t) => {
+        ctx.fillStyle = "rgba(2,8,20,1)";
+        ctx.fillRect(0, 0, w, h);
+        // Stars
+        if (!s.stars) s.stars = Array(150).fill(0).map(() => ({ x: Math.random() * w, y: Math.random() * h * 0.7, r: Math.random() * 1.2 * window.devicePixelRatio }));
+        s.stars.forEach((st) => {
+            ctx.fillStyle = `rgba(255,255,255,${0.4 + Math.sin(t / 700 + st.x) * 0.3})`;
+            ctx.fillRect(st.x, st.y, st.r, st.r);
+        });
+        // Aurora bands
+        const numBands = 4;
+        for (let b = 0; b < numBands; b++) {
+            const off = b * 80;
+            const baseY = h * 0.4 + b * 20;
+            ctx.beginPath();
+            ctx.moveTo(0, h);
+            for (let x = 0; x <= w; x += 16) {
+                const yy = baseY + Math.sin((x + t * 0.05 + off) / 200) * 60 + Math.sin((x + t * 0.03) / 80) * 25;
+                ctx.lineTo(x, yy);
+            }
+            ctx.lineTo(w, h);
+            ctx.closePath();
+            const grad = ctx.createLinearGradient(0, baseY - 100, 0, h);
+            grad.addColorStop(0, "rgba(0,255,150,0)");
+            grad.addColorStop(0.3, ["rgba(0,255,150,0.22)", "rgba(120,80,255,0.22)", "rgba(0,200,255,0.22)", "rgba(80,255,200,0.22)"][b]);
+            grad.addColorStop(1, "rgba(0,0,0,0)");
+            ctx.fillStyle = grad;
+            ctx.fill();
+        }
+    };
+    const ref = useCanvas(draw);
+    return <canvas ref={ref} data-testid={TID.backgroundCanvas} style={{ position: "absolute", inset: 0 }} />;
+}
+
+// Hyperspace — radial star streaks
+export function HyperspaceBg() {
+    const draw = (ctx, w, h, s, t) => {
+        if (!s.streaks) {
+            s.streaks = Array(180).fill(0).map(() => ({
+                a: Math.random() * Math.PI * 2,
+                d: Math.random() * Math.min(w, h) * 0.6,
+                v: 4 + Math.random() * 8,
+                hue: 200 + Math.random() * 80,
+            }));
+        }
+        ctx.fillStyle = "rgba(5,5,20,0.18)";
+        ctx.fillRect(0, 0, w, h);
+        const cx = w / 2, cy = h / 2;
+        s.streaks.forEach((st) => {
+            st.d += st.v * window.devicePixelRatio;
+            if (st.d > Math.hypot(w, h) / 1.5) {
+                st.d = 5;
+                st.a = Math.random() * Math.PI * 2;
+            }
+            const x1 = cx + Math.cos(st.a) * st.d;
+            const y1 = cy + Math.sin(st.a) * st.d;
+            const x2 = cx + Math.cos(st.a) * (st.d - st.v * 8);
+            const y2 = cy + Math.sin(st.a) * (st.d - st.v * 8);
+            ctx.strokeStyle = `hsla(${st.hue},90%,75%,0.85)`;
+            ctx.lineWidth = 1.2 * window.devicePixelRatio;
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        });
+    };
+    const ref = useCanvas(draw);
+    return <canvas ref={ref} data-testid={TID.backgroundCanvas} style={{ position: "absolute", inset: 0 }} />;
+}
+
+// Rain HD — slanted rain on dark cloudy background
+export function RainBg() {
+    const draw = (ctx, w, h, s, t) => {
+        if (!s.drops) {
+            s.drops = Array(220).fill(0).map(() => ({
+                x: Math.random() * w * 1.2 - w * 0.1,
+                y: Math.random() * h,
+                len: (10 + Math.random() * 18) * window.devicePixelRatio,
+                v: (10 + Math.random() * 8) * window.devicePixelRatio,
+            }));
+        }
+        ctx.fillStyle = "rgba(10,12,20,0.22)";
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = "rgba(153,204,255,0.55)";
+        ctx.lineWidth = 1 * window.devicePixelRatio;
+        s.drops.forEach((d) => {
+            d.y += d.v;
+            d.x += d.v * 0.25;
+            if (d.y > h) { d.y = -d.len; d.x = Math.random() * w * 1.2 - w * 0.1; }
+            ctx.beginPath();
+            ctx.moveTo(d.x, d.y);
+            ctx.lineTo(d.x - d.len * 0.25, d.y - d.len);
+            ctx.stroke();
+        });
+    };
+    const ref = useCanvas(draw);
+    return (
+        <div data-testid={TID.backgroundCanvas} style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(180deg, #0a0e1a 0%, #1a2438 60%, #232f48 100%)",
+        }}>
+            <canvas ref={ref} style={{ position: "absolute", inset: 0 }} />
         </div>
     );
 }
@@ -296,13 +474,18 @@ export function BackgroundLayer({ preset }) {
     else if (preset === "stars") Bg = StarfieldBg;
     else if (preset === "meteor") Bg = MeteorBg;
     else if (preset === "cosmic-teal") Bg = CosmicTealBg;
+    else if (preset === "sakura") Bg = SakuraBg;
+    else if (preset === "bubbles") Bg = BubblesBg;
+    else if (preset === "northern-lights") Bg = NorthernLightsBg;
+    else if (preset === "hyperspace") Bg = HyperspaceBg;
+    else if (preset === "rain") Bg = RainBg;
     return (
         <div data-testid={TID.backgroundLayer} style={{ position: "fixed", inset: 0, zIndex: 0 }}>
             <Bg />
             <div className="zp-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
             <div style={{
                 position: "absolute", inset: 0,
-                background: "radial-gradient(ellipse at center, transparent 0%, rgba(5,5,5,0.25) 95%)",
+                background: "radial-gradient(ellipse at center, transparent 0%, rgba(5,5,5,0.22) 95%)",
                 pointerEvents: "none",
             }} />
         </div>
@@ -311,6 +494,11 @@ export function BackgroundLayer({ preset }) {
 
 export const BG_PRESETS = [
     { id: "cosmic-teal", label: "Cosmic Teal" },
+    { id: "northern-lights", label: "N. Lights" },
+    { id: "hyperspace", label: "Hyperspace" },
+    { id: "sakura", label: "Sakura" },
+    { id: "bubbles", label: "Bubbles" },
+    { id: "rain", label: "Rain" },
     { id: "meteor", label: "Meteor" },
     { id: "aurora", label: "Aurora" },
     { id: "network", label: "Network" },

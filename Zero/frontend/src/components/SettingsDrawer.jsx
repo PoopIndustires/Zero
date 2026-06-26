@@ -1,10 +1,11 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Settings as SettingsIcon, Sparkles, Eye, Palette, Layers, MessageSquare } from "lucide-react";
+import { X, Settings as SettingsIcon, Sparkles, Eye, Palette, Layers, MessageSquare, Type } from "lucide-react";
 import { TID } from "@/constants/testIds";
 import { useZero } from "@/store/ZeroProvider";
 import { BG_PRESETS } from "@/components/Background";
 import { NETWORKS } from "@/components/SocialSidebar";
+import { CLOCK_FONTS } from "@/constants/clockFonts";
 
 const ACCENTS = [
     { id: "#5DEAD4", label: "Mint" },
@@ -74,60 +75,32 @@ export function SettingsDrawer({ open, setOpen }) {
                                 <section data-testid={TID.settingsSection("presets")}>
                                     <div className="flex items-center gap-2 mb-3 text-white/85"><Layers size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Presets</h3></div>
                                     <div className="grid grid-cols-2 gap-2">
-                                        <button
-                                            data-testid="preset-cosmic-teal"
-                                            onClick={() => {
-                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#00f5d4" });
-                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "cosmic-teal" });
-                                                dispatch({ type: "SET", key: "visibility", value: {
-                                                    clock: true, date: true, lunar: true, search: true,
-                                                    bookmarks: false, todo: false, notepad: false, timer: false,
-                                                    calendar: false, music: true, quote: false, socialSidebar: true,
-                                                } });
-                                                dispatch({ type: "SET", key: "widgetPositions", value: { music: { x: null, y: null } } });
-                                            }}
-                                            className="px-3 py-3 rounded-lg bg-gradient-to-br text-white text-left transition hover:scale-[1.02]"
-                                            style={{ background: "linear-gradient(135deg, #2c8f96, #093f71)", border: "1px solid rgba(255,255,255,0.15)" }}
-                                        >
-                                            <div className="font-display font-bold text-sm">Cosmic Teal</div>
-                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Meteor · #00f5d4</div>
-                                        </button>
-                                        <button
-                                            data-testid="preset-violet-night"
-                                            onClick={() => {
-                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#b000ff" });
-                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "aurora" });
-                                            }}
-                                            className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
-                                            style={{ background: "linear-gradient(135deg, #2a0a4a, #0a0a1f)", border: "1px solid rgba(255,255,255,0.12)" }}
-                                        >
-                                            <div className="font-display font-bold text-sm">Violet Night</div>
-                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Aurora · #b000ff</div>
-                                        </button>
-                                        <button
-                                            data-testid="preset-hacker"
-                                            onClick={() => {
-                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#00ff66" });
-                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "matrix" });
-                                            }}
-                                            className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
-                                            style={{ background: "linear-gradient(135deg, #0a3a0a, #050505)", border: "1px solid rgba(0,255,102,0.25)" }}
-                                        >
-                                            <div className="font-display font-bold text-sm">Hacker</div>
-                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Matrix · #00ff66</div>
-                                        </button>
-                                        <button
-                                            data-testid="preset-blossom"
-                                            onClick={() => {
-                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#ff6b9d" });
-                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "fireflies" });
-                                            }}
-                                            className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
-                                            style={{ background: "linear-gradient(135deg, #4a1a2a, #1a0a14)", border: "1px solid rgba(255,107,157,0.25)" }}
-                                        >
-                                            <div className="font-display font-bold text-sm">Blossom</div>
-                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Fireflies · #ff6b9d</div>
-                                        </button>
+                                        {[
+                                            { id: "cosmic-teal",    label: "Cosmic Teal",  sub: "Meteor · #00f5d4", accent: "#00f5d4", bg: "cosmic-teal",     gradient: "linear-gradient(135deg, #2c8f96, #093f71)" },
+                                            { id: "violet-night",   label: "Violet Night", sub: "Aurora · #b000ff", accent: "#b000ff", bg: "aurora",          gradient: "linear-gradient(135deg, #2a0a4a, #0a0a1f)" },
+                                            { id: "hacker",         label: "Hacker",       sub: "Matrix · #00ff66", accent: "#00ff66", bg: "matrix",          gradient: "linear-gradient(135deg, #0a3a0a, #050505)" },
+                                            { id: "blossom",        label: "Blossom",      sub: "Sakura · #ff6b9d", accent: "#ff6b9d", bg: "sakura",          gradient: "linear-gradient(135deg, #6d3a5a, #2d1830)" },
+                                            { id: "deep-ocean",     label: "Deep Ocean",   sub: "Bubbles · #60c8ff",accent: "#60c8ff", bg: "bubbles",         gradient: "linear-gradient(135deg, #1057a8, #062a4d)" },
+                                            { id: "aurora-borealis",label: "Aurora",       sub: "N.Lights · #5DEAD4",accent: "#5DEAD4",bg: "northern-lights", gradient: "linear-gradient(135deg, #0a4a3a, #02091a)" },
+                                            { id: "warp-drive",     label: "Warp Drive",   sub: "Hyperspace · #c9a9ff",accent: "#c9a9ff",bg: "hyperspace",   gradient: "linear-gradient(135deg, #3a1a6a, #0a0a2a)" },
+                                            { id: "monsoon",        label: "Monsoon",      sub: "Rain · #99ccff",   accent: "#99ccff", bg: "rain",            gradient: "linear-gradient(135deg, #232f48, #0a0e1a)" },
+                                            { id: "snowfall",       label: "Snowfall",     sub: "Snow · #ffffff",   accent: "#ffffff", bg: "snow",            gradient: "linear-gradient(135deg, #2a3a55, #0a1525)" },
+                                            { id: "firefly-dusk",   label: "Firefly Dusk", sub: "Fireflies · #ffd478",accent: "#ffd478",bg: "fireflies",     gradient: "linear-gradient(135deg, #3a2a14, #0f0810)" },
+                                        ].map((p) => (
+                                            <button
+                                                key={p.id}
+                                                data-testid={`preset-${p.id}`}
+                                                onClick={() => {
+                                                    dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: p.accent });
+                                                    dispatch({ type: "SET_PATH", path: ["theme", "background"], value: p.bg });
+                                                }}
+                                                className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
+                                                style={{ background: p.gradient, border: `1px solid ${p.accent}44` }}
+                                            >
+                                                <div className="font-display font-bold text-sm">{p.label}</div>
+                                                <div className="font-mono-ui text-[10px] text-white/70 mt-0.5">{p.sub}</div>
+                                            </button>
+                                        ))}
                                     </div>
                                     <button
                                         data-testid="reset-positions"
@@ -145,6 +118,29 @@ export function SettingsDrawer({ open, setOpen }) {
                                     >
                                         Reset widget positions
                                     </button>
+                                </section>
+
+                                {/* Clock Font */}
+                                <section data-testid={TID.settingsSection("clockfont")}>
+                                    <div className="flex items-center gap-2 mb-3 text-white/85"><Type size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Day Font</h3></div>
+                                    <div className="grid grid-cols-3 gap-1.5">
+                                        {CLOCK_FONTS.map((f) => {
+                                            const active = (state.theme.clockFont || "anurati") === f.id;
+                                            return (
+                                                <button
+                                                    key={f.id}
+                                                    data-testid={`clockfont-${f.id}`}
+                                                    onClick={() => dispatch({ type: "SET_PATH", path: ["theme", "clockFont"], value: f.id })}
+                                                    className={`px-2 py-2.5 rounded-lg text-center transition ${
+                                                        active ? "bg-white/15 border border-white/35 text-white" : "bg-white/[0.02] border border-white/[0.08] text-white/65 hover:text-white"
+                                                    }`}
+                                                >
+                                                    <div style={{ fontFamily: f.family, fontWeight: f.weight, letterSpacing: f.letterSpacing, fontSize: 14, lineHeight: 1 }}>FRI</div>
+                                                    <div className="text-[9px] font-mono-ui text-white/45 mt-1">{f.label}</div>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </section>
 
                                 {/* Visibility */}
