@@ -1,0 +1,114 @@
+{
+  "theme": "dark",
+  "archetype": "Archetype 7: Electric & Neon (Futuristic OS) & Archetype 5 (Luxury)",
+  "vibe": "Cinematic, futuristic glass desktop OS. Apple Vision Pro meets a hacker's terminal meets a Japanese arcade.",
+  "typography": {
+    "heading_font": "Cabinet Grotesk",
+    "body_font": "Geist Mono",
+    "mono_font": "JetBrains Mono",
+    "hierarchy": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tighter font-black",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-bold",
+      "h3": "text-xl sm:text-2xl tracking-tight font-semibold",
+      "body": "text-sm text-white/70 leading-relaxed font-mono",
+      "overline": "text-[10px] uppercase tracking-[0.2em] text-white/50 font-bold"
+    }
+  },
+  "colors": {
+    "background": "#050505",
+    "surface": "rgba(255, 255, 255, 0.03)",
+    "surface_hover": "rgba(255, 255, 255, 0.08)",
+    "border": "rgba(255, 255, 255, 0.1)",
+    "border_highlight": "rgba(255, 255, 255, 0.25)",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "rgba(255, 255, 255, 0.6)",
+    "accents": {
+      "web_search": "#00E5FF",
+      "app_launcher": "#B000FF",
+      "ai_ask": "#FF3366",
+      "success": "#00FF66",
+      "warning": "#FFB800",
+      "error": "#FF0033"
+    }
+  },
+  "layout_and_spacing": {
+    "philosophy": "Modular, floating, and spatial. Generous padding inside glass containers.",
+    "scale": {
+      "container_padding": "p-6 md:p-8",
+      "widget_gap": "gap-4 md:gap-6",
+      "border_radius": {
+        "sm": "rounded-lg",
+        "md": "rounded-xl",
+        "lg": "rounded-2xl",
+        "xl": "rounded-[32px]"
+      }
+    },
+    "grid_system": "Bento-style freeform floating grid. Elements can be snapped or floating. Use Framer Motion for drag and drop boundaries."
+  },
+  "surfaces_and_micro_themes": {
+    "glassmorphism": {
+      "base_classes": "bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
+      "hover_classes": "hover:bg-white/[0.06] hover:border-white/[0.15] transition-all duration-300",
+      "usage": "Floating windows, omnibar, sidebar panels, layout controls."
+    },
+    "retro_terminal": {
+      "base_classes": "bg-black/90 border border-green-500/30 text-green-400 font-mono drop-shadow-[0_0_8px_rgba(34,197,94,0.3)]",
+      "usage": "Matrix background overlay, code snippets, specific hacker-themed mini-apps."
+    }
+  },
+  "motion_and_interactions": {
+    "general": "Smooth spring physics (Framer Motion). No linear easing.",
+    "spring_config": {
+      "stiffness": 300,
+      "damping": 30,
+      "mass": 1
+    },
+    "windows": "Scale up slightly (0.95 -> 1) and fade in on launch. Dragging should feel weighty with slight rotation (rotateZ 1deg on drag).",
+    "omnibar": "Expand width on focus, glow ring matches current mode (Web/Apps/AI).",
+    "social_sidebar": "Slide in from right (x: 100% -> 0%) with a backdrop blur overlay."
+  },
+  "components_strategy": {
+    "omnibar": "Fixed top or center. 3-mode toggle with color shifting ring. Input purely unstyled HTML inside a glass pill.",
+    "floating_windows": "Use Framer Motion `<motion.div drag dragMomentum={false} dragControls />`. Each window needs a macOS-style header (close/min/max) and glass body.",
+    "bookmark_manager": "Grid of glass cards with site favicon and domain.",
+    "hero_clock": "Fliqlo style: large black/glass panels split horizontally with 3D flip animation, OR pure typography using Cabinet Grotesk text-[15vw].",
+    "music_player": "Mini draggable pill, spinning vinyl CD animation using `animate-spin`.",
+    "social_sidebar": "Right-aligned fixed panel, tabbed navigation (Lucide icons), embedded iframes. `w-[380px]`.",
+    "backgrounds": "Use `react-tsparticles` for snow/matrix/nodes, and CSS gradients for Aurora. Z-index -1."
+  },
+  "assets_and_media": {
+    "icon_library": "lucide-react",
+    "image_urls": [
+      {
+        "category": "background_abstract",
+        "url": "https://images.unsplash.com/photo-1746563947316-6f4cc65a66fa",
+        "description": "Abstract, curved black shapes with subtle shading"
+      },
+      {
+        "category": "background_cyberpunk",
+        "url": "https://images.unsplash.com/photo-1519608487953-e999c86e7455?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzh8MHwxfHNlYXJjaHwyfHxjeWJlcnB1bmslMjBuZW9uJTIwY2l0eSUyMG5pZ2h0fGVufDB8fHx8MTc4MjQ0ODczNHww&ixlib=rb-4.1.0&q=85",
+        "description": "Cyberpunk neon city night for vibrant aesthetic preset"
+      },
+      {
+        "category": "background_aurora",
+        "url": "https://images.unsplash.com/photo-1715538859909-914de12746b8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHxhdXJvcmElMjBib3JlYWxpcyUyMGRhcmslMjBza3l8ZW58MHx8fHwxNzgyNDQ4NzM0fDA&ixlib=rb-4.1.0&q=85",
+        "description": "Colorful aurora borealis in night sky for natural aesthetic preset"
+      }
+    ]
+  },
+  "accessibility_and_testing": {
+    "contrast": "Ensure text over glass panels has sufficient opacity/contrast. Add subtle text-shadow if needed.",
+    "testing_attributes": "All interactive elements (buttons, tabs, inputs, window headers) MUST have descriptive `data-testid` attributes (e.g., `data-testid=\"omnibar-input\"`, `data-testid=\"social-sidebar-toggle\"`).",
+    "prefers_reduced_motion": "Wrap complex canvas animations and window springs in standard CSS or disable on media query."
+  },
+  "instructions_to_main_agent": [
+    "Ensure all `.js` files use React with Tailwind CSS and Framer Motion. Do not use `.tsx`.",
+    "Build the core layout as a full-screen app (`h-screen w-screen overflow-hidden`) to mimic an OS.",
+    "Implement the dynamic background layer strictly behind all UI (`z-[-1]`).",
+    "For the floating windows, maintain a global state (e.g., Zustand or React Context) of open apps, their z-index, and positions.",
+    "The Omnibar should have a keyboard shortcut (e.g., Cmd/Ctrl+K) to focus, and its border color must smoothly transition based on the active mode.",
+    "Do NOT use `Inter`, `Roboto`, or generic fonts. Use `Cabinet Grotesk` for headings and `Geist Mono` or `JetBrains Mono` for UI and body text.",
+    "Strictly follow the glassmorphism base classes (`bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08]`) to avoid muddy transparency.",
+    "Provide clear `data-testid` on all buttons, toggles, window controls, and input fields for reliable automated testing."
+  ]
+}
