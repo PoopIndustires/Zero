@@ -180,6 +180,99 @@ export function StarfieldBg() {
     return <canvas ref={ref} data-testid={TID.backgroundCanvas} style={{ position: "absolute", inset: 0 }} />;
 }
 
+// Meteor: gentle starfield + occasional shooting stars (Zero's signature "meteor" effect)
+// When used standalone, paints a dark base each frame; when layered on top of a gradient,
+// we use clearRect + lighter blend so the gradient shines through.
+export function MeteorBg({ transparent = false }) {
+    const draw = (ctx, w, h, s, t) => {
+        if (!s.stars) {
+            s.stars = Array(220).fill(0).map(() => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: (Math.random() * 1.2 + 0.2) * window.devicePixelRatio,
+                tw: Math.random() * Math.PI * 2,
+            }));
+            s.meteors = [];
+            s.nextMeteorAt = t + 800;
+        }
+        if (transparent) {
+            ctx.clearRect(0, 0, w, h);
+        } else {
+            ctx.fillStyle = "rgba(5,8,16,0.35)";
+            ctx.fillRect(0, 0, w, h);
+        }
+        s.stars.forEach((st) => {
+            const a = 0.4 + (Math.sin(t / 600 + st.tw) + 1) / 4;
+            ctx.fillStyle = `rgba(255,255,255,${a})`;
+            ctx.beginPath();
+            ctx.arc(st.x, st.y, st.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        if (t >= s.nextMeteorAt) {
+            const ang = (45 * Math.PI) / 180;
+            s.meteors.push({
+                x: Math.random() * w * 0.6 + w * 0.2,
+                y: -10,
+                vx: Math.cos(ang) * 14 * window.devicePixelRatio,
+                vy: Math.sin(ang) * 14 * window.devicePixelRatio,
+                life: 0, maxLife: 120,
+            });
+            s.nextMeteorAt = t + 2200 + Math.random() * 3500;
+        }
+        s.meteors = s.meteors.filter((m) => {
+            m.x += m.vx;
+            m.y += m.vy;
+            m.life += 1;
+            const len = Math.hypot(m.vx, m.vy);
+            const tailLen = 140 * window.devicePixelRatio;
+            const grad = ctx.createLinearGradient(m.x, m.y, m.x - m.vx * (tailLen / len), m.y - m.vy * (tailLen / len));
+            grad.addColorStop(0, "rgba(255,255,255,0.95)");
+            grad.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 1.4 * window.devicePixelRatio;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.moveTo(m.x, m.y);
+            ctx.lineTo(m.x - m.vx * (tailLen / len), m.y - m.vy * (tailLen / len));
+            ctx.stroke();
+            return m.life < m.maxLife && m.x < w + 200 && m.y < h + 200;
+        });
+    };
+    const ref = useCanvas(draw);
+    return <canvas ref={ref} data-testid={TID.backgroundCanvas} style={{ position: "absolute", inset: 0 }} />;
+}
+
+// Cosmic Teal — the Zero default: brighter conic gradient matching the reference image.
+export function CosmicTealBg() {
+    return (
+        <div data-testid={TID.backgroundCanvas} style={{
+            position: "absolute", inset: 0,
+            background: `
+                radial-gradient(ellipse 80% 70% at 50% 55%, rgba(0,180,180,0.22) 0%, rgba(0,180,180,0) 60%),
+                conic-gradient(from 156deg at 55% 60%,
+                    #1a6a78 0%,
+                    #145a72 14%,
+                    #0c466e 28%,
+                    #0e3f6a 42%,
+                    #0a2e54 56%,
+                    #082842 70%,
+                    #155f7a 86%,
+                    #1a6a78 100%
+                )
+            `,
+        }}>
+            {/* Soft teal glow blob (center light) */}
+            <div style={{
+                position: "absolute",
+                inset: 0,
+                background: "radial-gradient(circle 700px at 55% 70%, rgba(0,245,212,0.22), transparent 60%)",
+                pointerEvents: "none",
+            }} />
+            <MeteorBg transparent />
+        </div>
+    );
+}
+
 export function AuroraBg() {
     return (
         <div data-testid={TID.backgroundCanvas} style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#050505" }}>
@@ -201,13 +294,15 @@ export function BackgroundLayer({ preset }) {
     else if (preset === "fireflies") Bg = FirefliesBg;
     else if (preset === "snow") Bg = SnowBg;
     else if (preset === "stars") Bg = StarfieldBg;
+    else if (preset === "meteor") Bg = MeteorBg;
+    else if (preset === "cosmic-teal") Bg = CosmicTealBg;
     return (
-        <div data-testid={TID.backgroundLayer} style={{ position: "fixed", inset: 0, zIndex: -1 }}>
+        <div data-testid={TID.backgroundLayer} style={{ position: "fixed", inset: 0, zIndex: 0 }}>
             <Bg />
             <div className="zp-grain" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
             <div style={{
                 position: "absolute", inset: 0,
-                background: "radial-gradient(ellipse at center, transparent 0%, rgba(5,5,5,0.55) 80%)",
+                background: "radial-gradient(ellipse at center, transparent 0%, rgba(5,5,5,0.25) 95%)",
                 pointerEvents: "none",
             }} />
         </div>
@@ -215,6 +310,8 @@ export function BackgroundLayer({ preset }) {
 }
 
 export const BG_PRESETS = [
+    { id: "cosmic-teal", label: "Cosmic Teal" },
+    { id: "meteor", label: "Meteor" },
     { id: "aurora", label: "Aurora" },
     { id: "network", label: "Network" },
     { id: "matrix", label: "Matrix" },

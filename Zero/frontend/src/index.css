@@ -17,10 +17,16 @@
     --zp-accent-current: var(--zp-accent-web);
 }
 
-html, body, #root {
+html, body {
     height: 100%;
     margin: 0;
     background: var(--zp-bg);
+    color: var(--zp-text);
+}
+#root {
+    height: 100%;
+    margin: 0;
+    background: transparent;
     color: var(--zp-text);
 }
 
@@ -40,19 +46,15 @@ body {
     font-family: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
 }
 
-/* Hero day name — sliced futuristic typeface */
+/* Hero day name — Anurati (Zero's signature sliced/stencil typeface) */
 .font-hero-day {
-    font-family: 'Anta', 'Genos', sans-serif;
-    font-weight: 900;
-    letter-spacing: 0.03em;
+    font-family: 'Anurati', 'Anta', 'Genos', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.08em;
 }
-/* "Stencil cut" effect on the hero day name */
-.hero-day-cut {
-    background-image: linear-gradient(180deg, var(--zp-accent-current) 0%, var(--zp-accent-current) 47%, transparent 47%, transparent 53%, var(--zp-accent-current) 53%, var(--zp-accent-current) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 40px color-mix(in srgb, var(--zp-accent-current) 35%, transparent);
+/* Outfit — Zero's body font */
+.font-outfit {
+    font-family: 'Outfit', 'Inter', sans-serif;
 }
 
 .font-pixel {

@@ -15,6 +15,7 @@ import { CalendarWidget } from "@/components/CalendarWidget";
 import { SocialSidebar } from "@/components/SocialSidebar";
 import { SettingsDrawer } from "@/components/SettingsDrawer";
 import { FloatingWindow } from "@/components/FloatingWindow";
+import { DraggableWidget } from "@/components/DraggableWidget";
 import { APPS } from "@/store/appsCatalog";
 import { TID } from "@/constants/testIds";
 import { BobaBuilder } from "@/apps/BobaBuilder";
@@ -53,7 +54,7 @@ function AppGrid({ open, setOpen, onOpenApp }) {
                     >
                         <div className="flex items-center justify-between mb-5">
                             <div>
-                                <div className="font-display text-2xl font-black text-white">All Apps</div>
+                                <div className="font-outfit text-2xl font-extrabold text-white">All Apps</div>
                                 <div className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-white/45 mt-0.5">Click to open · drag windows · resize</div>
                             </div>
                             <button onClick={() => setOpen(false)} className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/70">
@@ -77,7 +78,7 @@ function AppGrid({ open, setOpen, onOpenApp }) {
                                     }}
                                 >
                                     <div className="text-4xl">{a.icon}</div>
-                                    <div className="font-display text-[13px] font-bold text-white text-center">{a.name}</div>
+                                    <div className="font-outfit text-[13px] font-bold text-white text-center">{a.name}</div>
                                     <div className="font-mono-ui text-[9px] text-white/45 text-center line-clamp-2 leading-tight">{a.description}</div>
                                 </motion.button>
                             ))}
@@ -115,6 +116,10 @@ function Shell() {
 
     const toggleSidebar = () => dispatch({ type: "SET_PATH", path: ["social", "open"], value: !state.social.open });
 
+    // Music: if positions.music is null, fall back to a sensible default (centered bottom).
+    const musicPos = state.widgetPositions?.music;
+    const musicDefault = { x: window.innerWidth / 2 - 220, y: window.innerHeight - 110 };
+
     return (
         <div data-testid={TID.shell} className="h-screen w-screen relative overflow-hidden">
             <BackgroundLayer preset={state.theme.background} />
@@ -122,20 +127,18 @@ function Shell() {
             {/* Left vertical icon rail */}
             <LeftRail onOpenSettings={() => setSettingsOpen(true)} />
 
-            {/* Top-left: Zero+ wordmark */}
-            <div className="absolute top-5 left-1/2 -translate-x-1/2 z-10 zp-fade-up pointer-events-none">
-                <div className="font-pixel text-2xl tracking-wider text-white/85" style={{ textShadow: `0 0 12px ${state.theme.accent}55` }}>
-                    ZERO<span style={{ color: state.theme.accent }}>+</span>
-                </div>
-            </div>
-
-            {/* Top-right: App grid + Social */}
+            {/* Top-right: app grid + social */}
             <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
                 {state.visibility.socialSidebar && (
                     <button
                         data-testid={TID.socialSidebarToggle}
                         onClick={toggleSidebar}
-                        className="w-10 h-10 zp-glass rounded-xl flex items-center justify-center text-white/75 hover:text-white"
+                        className="w-10 h-10 rounded-2xl flex items-center justify-center text-white/85 transition"
+                        style={{
+                            background: "rgba(10, 10, 20, 0.78)",
+                            backdropFilter: "blur(16px)",
+                            border: "1px solid rgba(255,255,255,0.1)",
+                        }}
                         title="Social Sidebar"
                     >
                         <Users size={16} />
@@ -144,19 +147,19 @@ function Shell() {
                 <button
                     data-testid="app-grid-toggle"
                     onClick={() => setGridOpen(true)}
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-white/85 hover:text-white"
+                    className="w-10 h-10 rounded-2xl flex items-center justify-center transition"
                     style={{
-                        background: "rgba(255,255,255,0.85)",
+                        background: "rgba(255,255,255,0.95)",
                         color: "#0a0a0a",
                         boxShadow: `0 4px 16px rgba(0,0,0,0.35)`,
                     }}
                     title="All Apps"
                 >
-                    <LayoutGrid size={16} />
+                    <LayoutGrid size={16} strokeWidth={2.2} />
                 </button>
             </div>
 
-            {/* CENTER COLUMN — hero, search, bookmarks */}
+            {/* CENTER COLUMN — hero, search, bookmarks (always centered, not draggable) */}
             <div className="absolute inset-0 flex flex-col items-center justify-center px-6 pointer-events-none gap-7 pt-4 pb-44">
                 <div className="pointer-events-auto"><ZeroHero /></div>
                 {state.visibility.search && (
@@ -167,25 +170,69 @@ function Shell() {
                 <div className="pointer-events-auto"><BookmarkRow /></div>
             </div>
 
-            {/* LEFT column — Quote (top) + Calendar (mid) + Todo (bottom) */}
-            <div className="absolute left-20 top-6 w-[260px] flex flex-col gap-3 pointer-events-auto z-10 max-h-[calc(100vh-180px)] overflow-y-auto zp-scroll pr-1">
+            {/* Draggable widgets */}
+            <DraggableWidget id="quote" visible={state.visibility.quote} width={300}>
                 <QuoteWidget />
-                {state.visibility.calendar && <CalendarWidget />}
-                {state.visibility.todo && <TodoWidget />}
-            </div>
+            </DraggableWidget>
+            <DraggableWidget id="calendar" visible={state.visibility.calendar} width={260}>
+                <CalendarWidget />
+            </DraggableWidget>
+            <DraggableWidget id="todo" visible={state.visibility.todo} width={280}>
+                <TodoWidget />
+            </DraggableWidget>
+            <DraggableWidget id="notepad" visible={state.visibility.notepad} width={280}>
+                <NotepadWidget />
+            </DraggableWidget>
+            <DraggableWidget id="timer" visible={state.visibility.timer} width={260}>
+                <TimerWidget />
+            </DraggableWidget>
 
-            {/* RIGHT column — Notepad + Timer */}
-            <div className="absolute right-4 top-20 w-[280px] flex flex-col gap-3 pointer-events-auto z-10 max-h-[calc(100vh-180px)] overflow-y-auto zp-scroll pl-1">
-                {state.visibility.notepad && <NotepadWidget />}
-                {state.visibility.timer && <TimerWidget />}
-            </div>
+            {/* Music — draggable, default bottom-center */}
+            {state.visibility.music && (
+                <div
+                    data-widget-id="music"
+                    onPointerDown={(e) => {
+                        const tag = (e.target.tagName || "").toLowerCase();
+                        if (["button", "input", "textarea", "select", "a"].includes(tag)) return;
+                        if (state.theme.lockWidgets) return;
+                        e.preventDefault();
+                        const cur = state.widgetPositions?.music || musicDefault;
+                        const startX = e.clientX, startY = e.clientY;
+                        const ox = cur.x, oy = cur.y;
+                        const el = e.currentTarget;
+                        const onMove = (ev) => {
+                            const nx = ox + ev.clientX - startX;
+                            const ny = oy + ev.clientY - startY;
+                            el.style.left = nx + "px";
+                            el.style.top = ny + "px";
+                            el.style.transform = "none";
+                        };
+                        const onUp = (ev) => {
+                            window.removeEventListener("pointermove", onMove);
+                            window.removeEventListener("pointerup", onUp);
+                            dispatch({
+                                type: "SET_PATH",
+                                path: ["widgetPositions", "music"],
+                                value: { x: ox + ev.clientX - startX, y: oy + ev.clientY - startY },
+                            });
+                        };
+                        window.addEventListener("pointermove", onMove);
+                        window.addEventListener("pointerup", onUp);
+                    }}
+                    style={{
+                        position: "fixed",
+                        left: musicPos?.x ?? musicDefault.x,
+                        top: musicPos?.y ?? musicDefault.y,
+                        zIndex: 20,
+                        cursor: state.theme.lockWidgets ? "default" : "grab",
+                        touchAction: "none",
+                    }}
+                >
+                    <MusicPill />
+                </div>
+            )}
 
-            {/* BOTTOM CENTER — Music pill */}
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-20 pointer-events-auto">
-                <MusicPill />
-            </div>
-
-            {/* Settings drawer (opened from rail) */}
+            {/* Settings drawer */}
             <SettingsDrawer open={settingsOpen} setOpen={setSettingsOpen} />
 
             {/* App grid modal */}

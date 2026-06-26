@@ -70,6 +70,83 @@ export function SettingsDrawer({ open, setOpen }) {
                             </div>
 
                             <div className="p-5 space-y-7">
+                                {/* Presets */}
+                                <section data-testid={TID.settingsSection("presets")}>
+                                    <div className="flex items-center gap-2 mb-3 text-white/85"><Layers size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Presets</h3></div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <button
+                                            data-testid="preset-cosmic-teal"
+                                            onClick={() => {
+                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#00f5d4" });
+                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "cosmic-teal" });
+                                                dispatch({ type: "SET", key: "visibility", value: {
+                                                    clock: true, date: true, lunar: true, search: true,
+                                                    bookmarks: false, todo: false, notepad: false, timer: false,
+                                                    calendar: false, music: true, quote: false, socialSidebar: true,
+                                                } });
+                                                dispatch({ type: "SET", key: "widgetPositions", value: { music: { x: null, y: null } } });
+                                            }}
+                                            className="px-3 py-3 rounded-lg bg-gradient-to-br text-white text-left transition hover:scale-[1.02]"
+                                            style={{ background: "linear-gradient(135deg, #2c8f96, #093f71)", border: "1px solid rgba(255,255,255,0.15)" }}
+                                        >
+                                            <div className="font-display font-bold text-sm">Cosmic Teal</div>
+                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Meteor · #00f5d4</div>
+                                        </button>
+                                        <button
+                                            data-testid="preset-violet-night"
+                                            onClick={() => {
+                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#b000ff" });
+                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "aurora" });
+                                            }}
+                                            className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
+                                            style={{ background: "linear-gradient(135deg, #2a0a4a, #0a0a1f)", border: "1px solid rgba(255,255,255,0.12)" }}
+                                        >
+                                            <div className="font-display font-bold text-sm">Violet Night</div>
+                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Aurora · #b000ff</div>
+                                        </button>
+                                        <button
+                                            data-testid="preset-hacker"
+                                            onClick={() => {
+                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#00ff66" });
+                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "matrix" });
+                                            }}
+                                            className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
+                                            style={{ background: "linear-gradient(135deg, #0a3a0a, #050505)", border: "1px solid rgba(0,255,102,0.25)" }}
+                                        >
+                                            <div className="font-display font-bold text-sm">Hacker</div>
+                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Matrix · #00ff66</div>
+                                        </button>
+                                        <button
+                                            data-testid="preset-blossom"
+                                            onClick={() => {
+                                                dispatch({ type: "SET_PATH", path: ["theme", "accent"], value: "#ff6b9d" });
+                                                dispatch({ type: "SET_PATH", path: ["theme", "background"], value: "fireflies" });
+                                            }}
+                                            className="px-3 py-3 rounded-lg text-white text-left transition hover:scale-[1.02]"
+                                            style={{ background: "linear-gradient(135deg, #4a1a2a, #1a0a14)", border: "1px solid rgba(255,107,157,0.25)" }}
+                                        >
+                                            <div className="font-display font-bold text-sm">Blossom</div>
+                                            <div className="font-mono-ui text-[10px] text-white/65 mt-0.5">Fireflies · #ff6b9d</div>
+                                        </button>
+                                    </div>
+                                    <button
+                                        data-testid="reset-positions"
+                                        onClick={() => {
+                                            dispatch({ type: "SET", key: "widgetPositions", value: {
+                                                quote: { x: 100, y: 100 },
+                                                calendar: { x: 100, y: 230 },
+                                                todo: { x: 100, y: 520 },
+                                                notepad: { x: 1280, y: 100 },
+                                                timer: { x: 1280, y: 400 },
+                                                music: { x: null, y: null },
+                                            } });
+                                        }}
+                                        className="w-full mt-2 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/75 text-[12px] font-mono-ui"
+                                    >
+                                        Reset widget positions
+                                    </button>
+                                </section>
+
                                 {/* Visibility */}
                                 <section data-testid={TID.settingsSection("visibility")}>
                                     <div className="flex items-center gap-2 mb-3 text-white/85"><Eye size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Visibility</h3></div>

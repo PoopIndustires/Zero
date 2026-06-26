@@ -24,8 +24,12 @@ export function ZeroHero() {
         <div data-testid={TID.heroClock} className="flex flex-col items-center select-none zp-fade-up">
             {state.visibility.clock && (
                 <div
-                    className="font-hero-day hero-day-cut text-[10vw] md:text-[8.5rem] lg:text-[10rem] leading-none"
-                    style={{ filter: "drop-shadow(0 0 40px color-mix(in srgb, var(--zp-accent-current) 18%, transparent))" }}
+                    className="font-hero-day text-[12vw] md:text-[8rem] lg:text-[9.5rem] leading-none"
+                    style={{
+                        color: "var(--zp-accent-current)",
+                        textShadow: `0 0 60px color-mix(in srgb, var(--zp-accent-current) 35%, transparent), 0 0 12px color-mix(in srgb, var(--zp-accent-current) 25%, transparent)`,
+                        filter: "drop-shadow(0 0 16px color-mix(in srgb, var(--zp-accent-current) 12%, transparent))",
+                    }}
                 >
                     {day}
                 </div>
@@ -33,13 +37,13 @@ export function ZeroHero() {
             {state.visibility.date && (
                 <div
                     data-testid={TID.heroDate}
-                    className="font-display italic font-bold text-2xl md:text-3xl text-white/85 mt-4"
+                    className="font-outfit font-semibold text-xl md:text-2xl text-white/85 mt-4 tracking-wide"
                 >
                     {dateStr}
                 </div>
             )}
             {state.visibility.clock && (
-                <div className="font-mono-ui text-sm tracking-[0.3em] text-white/55 mt-3">
+                <div className="font-outfit text-base tracking-[0.2em] text-white/65 mt-2">
                     - {hh}:{mm}:{ss} -
                 </div>
             )}

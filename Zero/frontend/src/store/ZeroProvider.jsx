@@ -7,26 +7,35 @@ import { useDeviceId } from "@/hooks/useDeviceId";
 const LS_KEY = "zp_state_v1";
 
 const DEFAULT_STATE = {
-    // Visibility toggles (Zero's signature)
+    // Visibility toggles (Zero's signature) — match the "Cosmic Teal" preset on first load
     visibility: {
         clock: true,
         date: true,
-        lunar: false,
+        lunar: true,
         search: true,
-        bookmarks: true,
-        todo: true,
-        notepad: true,
-        timer: true,
-        calendar: true,
+        bookmarks: false,
+        todo: false,
+        notepad: false,
+        timer: false,
+        calendar: false,
         music: true,
-        quote: true,
+        quote: false,
         socialSidebar: true,
     },
     // Theme & background
     theme: {
-        accent: "#5DEAD4", // mint/teal Zero default
-        background: "aurora",
+        accent: "#00f5d4", // Zero "cosmic teal" default
+        background: "cosmic-teal",
         lockWidgets: false,
+    },
+    // Widget positions (top-left, in px). Defaults match the Zero export preset.
+    widgetPositions: {
+        quote:    { x: 100,  y: 100 },
+        calendar: { x: 100,  y: 230 },
+        todo:     { x: 100,  y: 520 },
+        notepad:  { x: 1280, y: 100 },
+        timer:    { x: 1280, y: 400 },
+        music:    { x: null, y: null }, // null = use centered bottom default
     },
     // Bookmark groups
     bookmarkGroups: ["Main"],
