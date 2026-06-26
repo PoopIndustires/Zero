@@ -19,24 +19,28 @@ const DEFAULT_STATE = {
         timer: true,
         calendar: true,
         music: true,
+        quote: true,
         socialSidebar: true,
     },
     // Theme & background
     theme: {
-        accent: "#00e5ff", // current accent
-        background: "aurora", // background preset
+        accent: "#5DEAD4", // mint/teal Zero default
+        background: "aurora",
         lockWidgets: false,
     },
-    // Bookmarks (initial seed)
+    // Bookmark groups
+    bookmarkGroups: ["Main"],
+    activeBookmarkGroup: "Main",
+    // Bookmarks
     bookmarks: [
-        { id: "bm1", title: "GitHub", url: "https://github.com", color: "#fff" },
-        { id: "bm2", title: "YouTube", url: "https://youtube.com", color: "#ff0033" },
-        { id: "bm3", title: "Reddit", url: "https://reddit.com", color: "#ff4500" },
-        { id: "bm4", title: "Hacker News", url: "https://news.ycombinator.com", color: "#ff6600" },
-        { id: "bm5", title: "Gmail", url: "https://mail.google.com", color: "#ea4335" },
-        { id: "bm6", title: "Maps", url: "https://maps.google.com", color: "#34a853" },
-        { id: "bm7", title: "Drive", url: "https://drive.google.com", color: "#fbbc04" },
-        { id: "bm8", title: "ChatGPT", url: "https://chat.openai.com", color: "#10a37f" },
+        { id: "bm1", title: "GitHub", url: "https://github.com", color: "#fff", group: "Main" },
+        { id: "bm2", title: "YouTube", url: "https://youtube.com", color: "#ff0033", group: "Main" },
+        { id: "bm3", title: "Reddit", url: "https://reddit.com", color: "#ff4500", group: "Main" },
+        { id: "bm4", title: "Hacker News", url: "https://news.ycombinator.com", color: "#ff6600", group: "Main" },
+        { id: "bm5", title: "Gmail", url: "https://mail.google.com", color: "#ea4335", group: "Main" },
+        { id: "bm6", title: "Maps", url: "https://maps.google.com", color: "#34a853", group: "Main" },
+        { id: "bm7", title: "Drive", url: "https://drive.google.com", color: "#fbbc04", group: "Main" },
+        { id: "bm8", title: "ChatGPT", url: "https://chat.openai.com", color: "#10a37f", group: "Main" },
     ],
     // Widgets
     todos: [

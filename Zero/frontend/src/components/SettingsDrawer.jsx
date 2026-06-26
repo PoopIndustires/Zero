@@ -7,11 +7,13 @@ import { BG_PRESETS } from "@/components/Background";
 import { NETWORKS } from "@/components/SocialSidebar";
 
 const ACCENTS = [
+    { id: "#5DEAD4", label: "Mint" },
     { id: "#00e5ff", label: "Cyan" },
     { id: "#b000ff", label: "Violet" },
     { id: "#ff3366", label: "Hot Pink" },
     { id: "#00ff66", label: "Acid Green" },
     { id: "#ffb800", label: "Amber" },
+    { id: "#ff6b00", label: "Orange" },
     { id: "#ffffff", label: "White" },
 ];
 
@@ -27,9 +29,8 @@ function Switch({ checked, onChange, testid }) {
     );
 }
 
-export function SettingsDrawer() {
+export function SettingsDrawer({ open, setOpen }) {
     const { state, dispatch } = useZero();
-    const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
         const handler = (e) => {
@@ -47,15 +48,6 @@ export function SettingsDrawer() {
 
     return (
         <>
-            <button
-                data-testid={TID.settingsToggle}
-                onClick={() => setOpen(true)}
-                className="fixed top-4 right-4 z-30 w-10 h-10 zp-glass rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:zp-glass-hi"
-                title="Settings (⌘ ,)"
-            >
-                <SettingsIcon size={16} />
-            </button>
-
             <AnimatePresence>
                 {open && (
                     <>
@@ -82,7 +74,7 @@ export function SettingsDrawer() {
                                 <section data-testid={TID.settingsSection("visibility")}>
                                     <div className="flex items-center gap-2 mb-3 text-white/85"><Eye size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Visibility</h3></div>
                                     <div className="space-y-2">
-                                        {["clock", "date", "search", "bookmarks", "todo", "notepad", "timer", "calendar", "music"].map((k) => (
+                                        {["clock", "date", "search", "bookmarks", "todo", "notepad", "timer", "calendar", "music", "quote"].map((k) => (
                                             <div key={k} className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.05]">
                                                 <span className="font-mono-ui text-sm text-white/75 capitalize">{k}</span>
                                                 <Switch testid={TID.settingsToggleWidget(k)} checked={v[k]} onChange={() => sv(k)} />

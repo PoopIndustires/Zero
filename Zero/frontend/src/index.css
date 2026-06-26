@@ -40,6 +40,26 @@ body {
     font-family: 'JetBrains Mono', 'Geist Mono', ui-monospace, monospace;
 }
 
+/* Hero day name — sliced futuristic typeface */
+.font-hero-day {
+    font-family: 'Anta', 'Genos', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+}
+/* "Stencil cut" effect on the hero day name */
+.hero-day-cut {
+    background-image: linear-gradient(180deg, var(--zp-accent-current) 0%, var(--zp-accent-current) 47%, transparent 47%, transparent 53%, var(--zp-accent-current) 53%, var(--zp-accent-current) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px color-mix(in srgb, var(--zp-accent-current) 35%, transparent);
+}
+
+.font-pixel {
+    font-family: 'VT323', monospace;
+    letter-spacing: 0.02em;
+}
+
 /* shadcn vars left in (compat with existing /components/ui) */
 @layer base {
     :root {
