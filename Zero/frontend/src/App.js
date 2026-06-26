@@ -118,7 +118,7 @@ function Shell() {
 
     // Music: if positions.music is null, fall back to a sensible default (centered bottom).
     const musicPos = state.widgetPositions?.music;
-    const musicDefault = { x: window.innerWidth / 2 - 220, y: window.innerHeight - 110 };
+    const musicDefault = { x: window.innerWidth / 2 - 230, y: window.innerHeight - 150 };
 
     return (
         <div data-testid={TID.shell} className="h-screen w-screen relative overflow-hidden">
@@ -192,8 +192,8 @@ function Shell() {
                 <div
                     data-widget-id="music"
                     onPointerDown={(e) => {
-                        const tag = (e.target.tagName || "").toLowerCase();
-                        if (["button", "input", "textarea", "select", "a"].includes(tag)) return;
+                        // Don't drag if the click started on an interactive control (or its child SVG)
+                        if (e.target.closest && e.target.closest("button, input, textarea, select, a, [role=slider]")) return;
                         if (state.theme.lockWidgets) return;
                         e.preventDefault();
                         const cur = state.widgetPositions?.music || musicDefault;

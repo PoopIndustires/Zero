@@ -13,9 +13,8 @@ export function DraggableWidget({ id, children, defaultX = 20, defaultY = 100, w
 
     const startDrag = (e) => {
         if (locked) return;
-        // Don't drag if user is starting on an interactive control (button/input/textarea)
-        const tag = (e.target.tagName || "").toLowerCase();
-        if (["button", "input", "textarea", "select", "a"].includes(tag)) return;
+        // Don't drag if user is starting on an interactive control (or its child SVG/icon)
+        if (e.target.closest && e.target.closest("button, input, textarea, select, a, [role=slider]")) return;
         e.preventDefault();
         const startX = e.clientX, startY = e.clientY;
         const ox = pos.x, oy = pos.y;
