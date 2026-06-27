@@ -132,24 +132,40 @@ export function MusicPill() {
 
                 {/* Right: EQ visualizer bars */}
                 <div className="shrink-0 self-center flex items-end gap-[3px] h-[80px] pr-1">
-                    {Array.from({ length: 6 }).map((_, idx) => {
-                        const base = [22, 38, 58, 72, 60, 44][idx];
-                        const animH = playing && !isEmpty
-                            ? base + Math.abs(Math.sin((Date.now() / 180) + idx)) * 18
-                            : base * 0.45;
-                        return (
-                            <span
-                                key={idx}
-                                className="w-[5px] rounded-full transition-all duration-150"
-                                style={{
-                                    height: `${animH}%`,
-                                    background: accent,
-                                    opacity: playing && !isEmpty ? (0.7 + (idx % 3) * 0.1) : 0.35,
-                                    boxShadow: playing && !isEmpty ? `0 0 6px ${accent}88` : "none",
-                                }}
-                            />
-                        );
-                    })}
+                    {(state.theme.musicStyle || "vinyl") === "pixel" ? (
+                        // Pixel EQ — square steps
+                        Array.from({ length: 6 }).map((_, idx) => {
+                            const base = [22, 38, 58, 72, 60, 44][idx];
+                            const animH = playing && !isEmpty ? base + Math.abs(Math.sin((Date.now() / 180) + idx)) * 18 : base * 0.45;
+                            const segs = Math.round(animH / 14);
+                            return (
+                                <div key={idx} className="w-[6px] flex flex-col-reverse gap-[2px]">
+                                    {Array.from({ length: segs }).map((__, s) => (
+                                        <span key={s} className="w-full h-[6px] rounded-[1px]"
+                                              style={{ background: accent, opacity: 0.55 + s * 0.07, boxShadow: playing && !isEmpty ? `0 0 4px ${accent}88` : "none" }} />
+                                    ))}
+                                </div>
+                            );
+                        })
+                    ) : (state.theme.musicStyle || "vinyl") === "bars" ? (
+                        // Solid bars (no glow)
+                        Array.from({ length: 12 }).map((_, idx) => {
+                            const animH = playing && !isEmpty ? 30 + Math.abs(Math.sin((Date.now() / 120) + idx * 0.6)) * 50 : 20;
+                            return <span key={idx} className="w-[3px] rounded-full transition-all" style={{ height: `${animH}%`, background: accent, opacity: 0.7 }} />;
+                        })
+                    ) : (
+                        // Vinyl default — tall mint bars w/ glow (matches mockup)
+                        Array.from({ length: 6 }).map((_, idx) => {
+                            const base = [22, 38, 58, 72, 60, 44][idx];
+                            const animH = playing && !isEmpty ? base + Math.abs(Math.sin((Date.now() / 180) + idx)) * 18 : base * 0.45;
+                            return (
+                                <span key={idx} className="w-[5px] rounded-full transition-all duration-150"
+                                      style={{ height: `${animH}%`, background: accent,
+                                               opacity: playing && !isEmpty ? (0.7 + (idx % 3) * 0.1) : 0.35,
+                                               boxShadow: playing && !isEmpty ? `0 0 6px ${accent}88` : "none" }} />
+                            );
+                        })
+                    )}
                 </div>
             </div>
         </div>

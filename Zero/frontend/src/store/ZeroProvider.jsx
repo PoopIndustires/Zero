@@ -27,6 +27,7 @@ const DEFAULT_STATE = {
         accent: "#00f5d4", // Zero "cosmic teal" default
         background: "cosmic-teal",
         clockFont: "anurati",
+        musicStyle: "vinyl", // vinyl | bars | pixel
         lockWidgets: false,
     },
     // Widget positions (top-left, in px). Defaults match the Zero export preset.

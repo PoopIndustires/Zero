@@ -143,6 +143,25 @@ export function SettingsDrawer({ open, setOpen }) {
                                     </div>
                                 </section>
 
+                                {/* Music style */}
+                                <section data-testid={TID.settingsSection("music")}>
+                                    <div className="flex items-center gap-2 mb-3 text-white/85"><Layers size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Music Visualizer</h3></div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {["vinyl", "bars", "pixel"].map((m) => (
+                                            <button
+                                                key={m}
+                                                data-testid={`music-style-${m}`}
+                                                onClick={() => dispatch({ type: "SET_PATH", path: ["theme", "musicStyle"], value: m })}
+                                                className={`px-3 py-2 rounded-lg text-[11px] font-mono-ui uppercase tracking-[0.15em] border transition ${
+                                                    (state.theme.musicStyle || "vinyl") === m
+                                                        ? "bg-white/15 border-white/35 text-white"
+                                                        : "bg-white/[0.02] border-white/[0.08] text-white/55 hover:text-white"
+                                                }`}
+                                            >{m}</button>
+                                        ))}
+                                    </div>
+                                </section>
+
                                 {/* Visibility */}
                                 <section data-testid={TID.settingsSection("visibility")}>
                                     <div className="flex items-center gap-2 mb-3 text-white/85"><Eye size={14} /> <h3 className="font-display font-bold text-sm uppercase tracking-[0.18em]">Visibility</h3></div>
